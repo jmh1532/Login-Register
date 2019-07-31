@@ -88,4 +88,91 @@ public class MemberDao {
 		}
 		return list;
 	}
+	
+	
+	public int register(Member me) throws SQLException{
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		int check = 0;
+		int result = 0;
+		String sql1 = "select count(*) from member2 where id=?";
+		String sql2 = "insert into member2 values(?,?,?,?,?,sysdate)";
+		try {
+			conn = getConnection();
+			
+			pstmt = conn.prepareStatement(sql1);
+			pstmt.setString(1, me.getId());
+			rs = pstmt.executeQuery();
+			if(rs.next()) check = rs.getInt(1);
+		
+			rs.close();
+			pstmt.close();
+			
+			if (check == 0) {//중복이 아니면
+				pstmt = conn.prepareStatement(sql2);
+				
+				pstmt.setString(1, me.getId());
+				pstmt.setString(2, me.getPasswd());
+				pstmt.setString(3, me.getName());
+				pstmt.setString(4, me.getAddress());
+				pstmt.setString(5, me.getTel());
+				pstmt.executeUpdate();
+				
+				result = 1; //성공
+			}else result= 0; //실패
+
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			System.out.println(e.getMessage());
+		}finally {
+			if (rs != null) rs.close();
+			if (pstmt != null) pstmt.close();
+			if (conn !=null) conn.close();
+		}
+		return result;
+	}
+	
+	public int update(Member me) throws SQLException{
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		int check = 0;
+		int result = 0;
+		String sql1 = "select count(*) from member2 where id=?";
+		String sql2 = "update member2 set id=?, passwd=?,name=?,address=?,tel=? ";
+		try {
+			conn = getConnection();
+			
+			pstmt = conn.prepareStatement(sql1);
+			pstmt.setString(1, me.getId());
+			rs = pstmt.executeQuery();
+			if(rs.next()) check = rs.getInt(1);
+		
+			rs.close();
+			pstmt.close();
+			
+			if (check == 0) {//중복이 아니면
+				pstmt = conn.prepareStatement(sql2);
+				
+				pstmt.setString(1, me.getId());
+				pstmt.setString(2, me.getPasswd());
+				pstmt.setString(3, me.getName());
+				pstmt.setString(4, me.getAddress());
+				pstmt.setString(5, me.getTel());
+				pstmt.executeUpdate();
+				
+				result = 1; //성공
+			}else result= 0; //실패
+
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			System.out.println(e.getMessage());
+		}finally {
+			if (rs != null) rs.close();
+			if (pstmt != null) pstmt.close();
+			if (conn !=null) conn.close();
+		}
+		return result;
+	}
 }
