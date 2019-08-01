@@ -18,8 +18,9 @@
 		<tr><td><a href="logOut.jsp">로그아웃</a></td></tr>
 		<tr><td><a href="joinForm.jsp">회원가입</a></td></tr>
 		<tr><td><a href="memberList.jsp">회원명단</a></td></tr>
-		<tr><td><a href="updateForm.jsp">회원정보 수정</a></td></tr>
-		<tr><td><a href="deleteForm.jsp">회원탈퇴</a></td></tr>
+		<tr><td><a href="updateForm.jsp?id=<%=id%>">회원정보 수정</a></td></tr>
+		<tr><td><a href="deleteForm.jsp?id=<%=id%>">회원탈퇴</a></td></tr>
 	</table>
+	
 </body>
 </html>

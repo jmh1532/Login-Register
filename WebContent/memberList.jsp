@@ -39,6 +39,7 @@
 			} %>
 		</table>
 		<%}%>
+		<input type="button" value="로그인 화면" onclick="location.href='main.jsp'">
 	
 
 </body>

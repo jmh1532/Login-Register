@@ -13,6 +13,7 @@ import javax.sql.*;
 
 
 
+
 public class MemberDao {
 	
 	private MemberDao() {}
@@ -137,33 +138,22 @@ public class MemberDao {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
-		int check = 0;
 		int result = 0;
-		String sql1 = "select count(*) from member2 where id=?";
-		String sql2 = "update member2 set id=?, passwd=?,name=?,address=?,tel=? ";
+	
+		String sql = "update member2 set  passwd=?,name=?,address=?,tel=? where id=?";
 		try {
 			conn = getConnection();
-			
-			pstmt = conn.prepareStatement(sql1);
-			pstmt.setString(1, me.getId());
-			rs = pstmt.executeQuery();
-			if(rs.next()) check = rs.getInt(1);
-		
-			rs.close();
-			pstmt.close();
-			
-			if (check == 0) {//중복이 아니면
-				pstmt = conn.prepareStatement(sql2);
-				
-				pstmt.setString(1, me.getId());
-				pstmt.setString(2, me.getPasswd());
-				pstmt.setString(3, me.getName());
-				pstmt.setString(4, me.getAddress());
-				pstmt.setString(5, me.getTel());
-				pstmt.executeUpdate();
-				
-				result = 1; //성공
-			}else result= 0; //실패
+
+			pstmt = conn.prepareStatement(sql);
+
+			pstmt.setString(1, me.getPasswd());
+			pstmt.setString(2, me.getName());
+			pstmt.setString(3, me.getAddress());
+			pstmt.setString(4, me.getTel());
+			pstmt.setString(5, me.getId());
+			pstmt.executeUpdate();
+
+			result = 1; // 성공
 
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
@@ -173,6 +163,62 @@ public class MemberDao {
 			if (pstmt != null) pstmt.close();
 			if (conn !=null) conn.close();
 		}
+		return result;
+	}
+	
+	
+	public Member info(String id) throws SQLException{
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		Member me = new Member();
+		String sql = "select * from member2 where id = ?";
+		try {
+			conn = getConnection();
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, id);
+			rs = pstmt.executeQuery();
+			if (rs.next()) {
+				me.setAddress(rs.getString("address"));
+				me.setId(rs.getString("id"));
+				me.setName(rs.getString("name"));
+				me.setPasswd(rs.getString("passwd"));
+				me.setTel(rs.getString("tel"));
+				me.setReg_date(rs.getDate("reg_date"));
+
+			}
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			System.out.println(e.getMessage());
+		}finally {
+			if (rs != null) rs.close();
+			if (pstmt != null) pstmt.close();
+			if (conn !=null) conn.close();
+		}
+		return me;
+	}
+	
+	public int delete(String id, String passwd) throws SQLException{
+		int result = 0;
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String sql = "delete from member2 where id = ?";
+
+		try {
+			conn = getConnection();
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, id);
+			result = pstmt.executeUpdate();
+			
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}finally {
+			if(rs != null) rs.close();
+			if(pstmt != null) pstmt.close();
+			if(conn != null) conn.close();
+		}
+		
 		return result;
 	}
 }
